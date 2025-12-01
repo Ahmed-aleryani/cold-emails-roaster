@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -118,14 +120,71 @@ I hope this email finds you well. I wanted to reach out because I noticed your c
         )}
 
         {result && (
-          <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+          <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-lg p-6 md:p-8">
+            <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-6">
               Results
             </h2>
-            <div className="prose prose-zinc dark:prose-invert max-w-none">
-              <div className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-300 leading-relaxed">
+            <div className="prose prose-zinc dark:prose-invert prose-headings:text-zinc-900 dark:prose-headings:text-zinc-50 prose-p:text-zinc-700 dark:prose-p:text-zinc-300 prose-strong:text-zinc-900 dark:prose-strong:text-zinc-50 prose-ul:text-zinc-700 dark:prose-ul:text-zinc-300 prose-ol:text-zinc-700 dark:prose-ol:text-zinc-300 prose-li:text-zinc-700 dark:prose-li:text-zinc-300 prose-code:text-orange-600 dark:prose-code:text-orange-400 prose-pre:bg-zinc-900 dark:prose-pre:bg-zinc-950 prose-pre:text-zinc-100 prose-blockquote:border-l-orange-500 prose-blockquote:text-zinc-600 dark:prose-blockquote:text-zinc-400 max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({ node, ...props }) => (
+                    <h1 className="text-3xl font-bold mt-8 mb-4 text-zinc-900 dark:text-zinc-50" {...props} />
+                  ),
+                  h2: ({ node, ...props }) => (
+                    <h2 className="text-2xl font-bold mt-6 mb-3 text-zinc-900 dark:text-zinc-50" {...props} />
+                  ),
+                  h3: ({ node, ...props }) => (
+                    <h3 className="text-xl font-semibold mt-4 mb-2 text-zinc-900 dark:text-zinc-50" {...props} />
+                  ),
+                  p: ({ node, ...props }) => (
+                    <p className="mb-4 leading-7 text-zinc-700 dark:text-zinc-300" {...props} />
+                  ),
+                  ul: ({ node, ...props }) => (
+                    <ul className="list-disc list-inside mb-4 space-y-2 ml-4 text-zinc-700 dark:text-zinc-300" {...props} />
+                  ),
+                  ol: ({ node, ...props }) => (
+                    <ol className="list-decimal list-inside mb-4 space-y-2 ml-4 text-zinc-700 dark:text-zinc-300" {...props} />
+                  ),
+                  li: ({ node, ...props }) => (
+                    <li className="leading-7 text-zinc-700 dark:text-zinc-300" {...props} />
+                  ),
+                  strong: ({ node, ...props }) => (
+                    <strong className="font-bold text-zinc-900 dark:text-zinc-50" {...props} />
+                  ),
+                  em: ({ node, ...props }) => (
+                    <em className="italic text-zinc-700 dark:text-zinc-300" {...props} />
+                  ),
+                  code: ({ node, inline, className, children, ...props }: any) => {
+                    const match = /language-(\w+)/.exec(className || "");
+                    return inline ? (
+                      <code
+                        className="px-1.5 py-0.5 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded text-sm font-mono"
+                        {...props}
+                      >
+                        {children}
+                      </code>
+                    ) : (
+                      <pre className="p-4 bg-zinc-900 dark:bg-zinc-950 text-zinc-100 rounded-lg overflow-x-auto text-sm font-mono mb-4">
+                        <code className={className} {...props}>
+                          {children}
+                        </code>
+                      </pre>
+                    );
+                  },
+                  blockquote: ({ node, ...props }) => (
+                    <blockquote
+                      className="border-l-4 border-orange-500 pl-4 italic my-4 text-zinc-600 dark:text-zinc-400"
+                      {...props}
+                    />
+                  ),
+                  hr: ({ node, ...props }) => (
+                    <hr className="my-6 border-zinc-300 dark:border-zinc-600" {...props} />
+                  ),
+                }}
+              >
                 {result}
-              </div>
+              </ReactMarkdown>
             </div>
           </div>
         )}
