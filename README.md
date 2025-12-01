@@ -16,7 +16,7 @@ Paste your cold email and get:
 ### Prerequisites
 
 - Node.js 18+
-- OpenAI API key
+- Google AI API key
 
 ### Installation
 
@@ -31,9 +31,9 @@ Paste your cold email and get:
    npm install
    ```
 
-3. Create a `.env.local` file with your OpenAI API key:
+3. Create a `.env.local` file with your Google AI API key:
    ```
-   OPENAI_API_KEY=your_api_key_here
+   GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
    ```
 
 4. Run the development server:
@@ -47,7 +47,8 @@ Paste your cold email and get:
 
 - [Next.js](https://nextjs.org/) - React framework
 - [Tailwind CSS](https://tailwindcss.com/) - Styling
-- [OpenAI API](https://openai.com/) - AI-powered email analysis
+- [Vercel AI SDK](https://sdk.vercel.ai/) - AI integration
+- [Google Gemini](https://ai.google.dev/) - AI-powered email analysis
 
 ## License
 

@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
-
-function getOpenAIClient() {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    throw new Error("OPENAI_API_KEY environment variable is not set");
-  }
-  return new OpenAI({ apiKey });
-}
+import { generateText } from "ai";
+import { google } from "@ai-sdk/google";
 
 export async function POST(request: NextRequest) {
   try {
+    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "Google API key is not configured" },
+        { status: 500 }
+      );
+    }
+
     const { email } = await request.json();
 
     if (!email || typeof email !== "string" || email.trim().length === 0) {
@@ -19,8 +20,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    const openai = getOpenAIClient();
 
     const systemPrompt = `You are an expert cold email critic with a sharp wit and no filter. Your job is to:
 
@@ -43,35 +42,24 @@ Please provide:
 
 3. **💡 WHY IT'S BETTER**: Explain the key changes you made and why they work. Be specific about what principles you applied.`;
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ],
+    const { text } = await generateText({
+      model: google("gemini-1.5-flash"),
+      system: systemPrompt,
+      prompt: userPrompt,
       temperature: 0.8,
-      max_tokens: 2000,
+      maxOutputTokens: 2000,
     });
 
-    const response = completion.choices[0]?.message?.content;
-
-    if (!response) {
+    if (!text) {
       return NextResponse.json(
         { error: "Failed to generate response" },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ result: response });
+    return NextResponse.json({ result: text });
   } catch (error) {
     console.error("Error processing request:", error);
-
-    if (error instanceof Error && error.message.includes("API key")) {
-      return NextResponse.json(
-        { error: "OpenAI API key is not configured" },
-        { status: 500 }
-      );
-    }
 
     return NextResponse.json(
       { error: "An error occurred while processing your request" },
