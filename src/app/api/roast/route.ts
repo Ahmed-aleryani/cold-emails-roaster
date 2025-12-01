@@ -35,10 +35,11 @@ Be entertaining but educational. The goal is to help people write better cold em
 ${email}
 ---
 
-Please provide:
-1. **🔥 THE ROAST**: A brutally honest, entertaining critique of this email. Point out what's wrong, what's cliché, what makes the reader want to hit delete. Be savage but constructive.
+IMPORTANT: You MUST provide all three sections below. Do not stop until all sections are complete.
 
-2. **✨ THE REWRITE**: An improved version of this email that would actually get responses. Keep the core intent but make it compelling.
+1. **🔥 THE ROAST**: A brutally honest, entertaining critique of this email. Point out what's wrong, what's cliché, what makes the reader want to hit delete. Be savage but constructive. Keep this section focused and impactful.
+
+2. **✨ THE REWRITE**: An improved version of this email that would actually get responses. Keep the core intent but make it compelling. Include the full rewritten email.
 
 3. **💡 WHY IT'S BETTER**: Explain the key changes you made and why they work. Be specific about what principles you applied.`;
 
@@ -47,7 +48,7 @@ Please provide:
       system: systemPrompt,
       prompt: userPrompt,
       temperature: 0.8,
-      maxOutputTokens: 2000,
+      maxOutputTokens: 12000, // Increased to 12k tokens to ensure all three sections (Roast, Rewrite, Why It's Better) are fully delivered
     });
 
     if (!text) {
