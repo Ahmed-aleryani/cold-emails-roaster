@@ -43,7 +43,7 @@ Please provide:
 3. **💡 WHY IT'S BETTER**: Explain the key changes you made and why they work. Be specific about what principles you applied.`;
 
     const { text } = await generateText({
-      model: google("gemini-2.5-flash-preview-05-20"),
+      model: google("gemini-2.5-flash"),
       system: systemPrompt,
       prompt: userPrompt,
       temperature: 0.8,
