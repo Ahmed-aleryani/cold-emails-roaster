@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
+import logger from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
+    logger.info({ method: "POST", path: "/api/roast" }, "Request received");
+
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
     if (!apiKey) {
+      logger.error({ error: "Missing API key" }, "Google API key is not configured");
       return NextResponse.json(
         { error: "Google API key is not configured" },
         { status: 500 }
@@ -13,8 +17,10 @@ export async function POST(request: NextRequest) {
     }
 
     const { email } = await request.json();
+    logger.info({ emailLength: email?.length }, "Email received");
 
     if (!email || typeof email !== "string" || email.trim().length === 0) {
+      logger.warn({ email: email?.substring(0, 50) }, "Invalid email provided");
       return NextResponse.json(
         { error: "Please provide a cold email to roast" },
         { status: 400 }
@@ -43,24 +49,28 @@ IMPORTANT: You MUST provide all three sections below. Do not stop until all sect
 
 3. **💡 WHY IT'S BETTER**: Explain the key changes you made and why they work. Be specific about what principles you applied.`;
 
+    logger.info({ promptLength: userPrompt.length, emailLength: email.length, maxOutputTokens: 32768 }, "Generating AI response");
+
     const { text } = await generateText({
       model: google("gemini-2.5-flash"),
       system: systemPrompt,
       prompt: userPrompt,
       temperature: 0.8,
-      maxOutputTokens: 12000, // Increased to 12k tokens to ensure all three sections (Roast, Rewrite, Why It's Better) are fully delivered
+      maxOutputTokens: 32768, // Increased to 32k tokens to allow for more comprehensive responses (max limit: 65,536)
     });
 
     if (!text) {
+      logger.error({ error: "No text generated" }, "Failed to generate response");
       return NextResponse.json(
         { error: "Failed to generate response" },
         { status: 500 }
       );
     }
 
+    logger.info({ responseLength: text.length }, "AI response generated successfully");
     return NextResponse.json({ result: text });
   } catch (error) {
-    console.error("Error processing request:", error);
+    logger.error({ err: error, errorMessage: error instanceof Error ? error.message : String(error) }, "Error processing request");
 
     return NextResponse.json(
       { error: "An error occurred while processing your request" },
