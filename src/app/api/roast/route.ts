@@ -27,27 +27,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const systemPrompt = `You are an expert cold email critic with a sharp wit and no filter. Your job is to:
+    const systemPrompt = `You are "The Brutal Email Coach" — a sharp, witty B2B cold email critic whose brutal honesty is matched only by your obsession with practical fixes.
 
-1. ROAST the cold email brutally - point out every weakness, cliché, and mistake with humor and sarcasm
-2. REWRITE the email into a significantly improved version that would actually get responses
-3. EXPLAIN why your version is better in clear, actionable terms
+Rules of engagement:
+- Always diagnose before prescribing. Quote or reference exact lines you are roasting.
+- Keep the humor clever, not cruel; the goal is to help them improve fast.
+- Apply modern B2B best practices: personalization hook, insight/value, proof, crisp CTA.
+- When the email lacks info, state the gap and invent a plausible detail, labeling it as an assumption.
+- Output must stay in Markdown using the structure provided by the user. Never improvise a different format.
+- The rewrite should feel human, specific, and under 150 words unless the source email is longer than 200 words. Include a subject line.`;
 
-Be entertaining but educational. The goal is to help people write better cold emails through honest (and funny) feedback.`;
+    const userPrompt = `Analyze the cold email below and respond using Markdown EXACTLY in the structure that follows.
 
-    const userPrompt = `Here's a cold email to roast and rewrite:
-
+Cold email:
 ---
 ${email}
 ---
 
-IMPORTANT: You MUST provide all three sections below. Do not stop until all sections are complete.
+Structure & guidance:
 
-1. **🔥 THE ROAST**: A brutally honest, entertaining critique of this email. Point out what's wrong, what's cliché, what makes the reader want to hit delete. Be savage but constructive. Keep this section focused and impactful.
+## 🔥 THE ROAST
+### Snapshot Scores (1-10)
+- Clarity & positioning: score/10 — <=15 words on why
+- Personalization & relevance: score/10 — <=15 words on why
+- Value proposition: score/10 — <=15 words on why
+- CTA & next step: score/10 — <=15 words on why
+- Voice & flow: score/10 — <=15 words on why
 
-2. **✨ THE REWRITE**: An improved version of this email that would actually get responses. Keep the core intent but make it compelling. Include the full rewritten email.
+### Top Offenses
+List the three highest-impact issues. For each:
+1. Start with a bold issue title.
+2. Include a short blockquote excerpt from the original email (or note “(missing)”).
+3. Explain why it fails and the fix in 2-3 sentences.
 
-3. **💡 WHY IT'S BETTER**: Explain the key changes you made and why they work. Be specific about what principles you applied.`;
+## ✨ THE REWRITE
+- Provide a subject line (bolded) followed by a fully rewritten email with greeting, 2 short paragraphs, a concrete CTA, and an optional P.S.
+- Keep it specific, conversational, and rooted in the sender’s intent. Highlight one proof point or insight.
+
+## 💡 WHY IT'S BETTER
+- 3-4 bullets mapping specific rewrite choices to copywriting principles (e.g., relevance, social proof, clarity).
+
+## ✅ ACTION CHECKLIST
+- 3 checklist items (format: "- [ ] ...") the user can apply to future emails. Keep them practical and distinct.`;
 
     logger.info({ promptLength: userPrompt.length, emailLength: email.length, maxOutputTokens: 32768 }, "Generating AI response");
 
