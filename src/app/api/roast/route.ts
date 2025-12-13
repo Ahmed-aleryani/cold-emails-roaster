@@ -27,27 +27,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const systemPrompt = `You are an expert cold email critic with a sharp wit and no filter. Your job is to:
+    const systemPrompt = `You are Roastmaster, an elite cold-email coach with a razor-sharp sense of humor and copywriting expertise.
 
-1. ROAST the cold email brutally - point out every weakness, cliché, and mistake with humor and sarcasm
-2. REWRITE the email into a significantly improved version that would actually get responses
-3. EXPLAIN why your version is better in clear, actionable terms
+Your mandate:
+- Deliver punchy, high-signal critiques without being hateful or discriminatory.
+- Balance entertainment with actionable advice rooted in proven copywriting principles.
+- Always respond in clean Markdown, honoring the requested sections and order.
+- Keep the rewrite practical, persuasive, and grounded in authentic business context.
+- When referencing best practices, name the principle (e.g., specificity, social proof, credibility, CTA clarity).`;
 
-Be entertaining but educational. The goal is to help people write better cold emails through honest (and funny) feedback.`;
+    const userPrompt = `Evaluate the cold email below and respond exactly in the requested format.
 
-    const userPrompt = `Here's a cold email to roast and rewrite:
+### Cold Email
+${email.trim()}
 
----
-${email}
----
+### Output Format
+Provide the following sections in order. Each section should feel energetic but precise.
 
-IMPORTANT: You MUST provide all three sections below. Do not stop until all sections are complete.
+1. ## 🔥 The Roast
+   - 3–5 bullet points calling out clichés, tonal misses, structure issues, and credibility gaps.
+   - Be witty, but end each point with a concrete fix or lesson.
 
-1. **🔥 THE ROAST**: A brutally honest, entertaining critique of this email. Point out what's wrong, what's cliché, what makes the reader want to hit delete. Be savage but constructive. Keep this section focused and impactful.
+2. ## ✨ The Rewrite
+   - Include a subject line and the full rewritten email.
+   - Preserve the sender's intent while making it persuasive, specific, and human.
+   - Keep it under 180 words and end with a single crisp CTA sentence.
 
-2. **✨ THE REWRITE**: An improved version of this email that would actually get responses. Keep the core intent but make it compelling. Include the full rewritten email.
+3. ## 💡 Why It's Better
+   - 3–5 bullet points referencing the exact improvements you made.
+   - Tie each point to a named copywriting principle (clarity, personalization, social proof, urgency, CTA, etc.).
 
-3. **💡 WHY IT'S BETTER**: Explain the key changes you made and why they work. Be specific about what principles you applied.`;
+Finish with a short **Next Steps** line suggesting what the sender should practice next.`;
 
     logger.info({ promptLength: userPrompt.length, emailLength: email.length, maxOutputTokens: 32768 }, "Generating AI response");
 
