@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type HTMLAttributes } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -42,6 +44,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 dark:from-zinc-900 dark:to-zinc-800">
       <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="flex justify-end mb-6">
+          <ThemeToggle />
+        </div>
         <header className="text-center mb-10">
           <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
             🔥 Cold Email Roaster
@@ -128,36 +133,35 @@ I hope this email finds you well. I wanted to reach out because I noticed your c
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  h1: ({ node, ...props }) => (
+                  h1: (props) => (
                     <h1 className="text-3xl font-bold mt-8 mb-4 text-zinc-900 dark:text-zinc-50" {...props} />
                   ),
-                  h2: ({ node, ...props }) => (
+                  h2: (props) => (
                     <h2 className="text-2xl font-bold mt-6 mb-3 text-zinc-900 dark:text-zinc-50" {...props} />
                   ),
-                  h3: ({ node, ...props }) => (
+                  h3: (props) => (
                     <h3 className="text-xl font-semibold mt-4 mb-2 text-zinc-900 dark:text-zinc-50" {...props} />
                   ),
-                  p: ({ node, ...props }) => (
+                  p: (props) => (
                     <p className="mb-4 leading-7 text-zinc-700 dark:text-zinc-300" {...props} />
                   ),
-                  ul: ({ node, ...props }) => (
+                  ul: (props) => (
                     <ul className="list-disc list-inside mb-4 space-y-2 ml-4 text-zinc-700 dark:text-zinc-300" {...props} />
                   ),
-                  ol: ({ node, ...props }) => (
+                  ol: (props) => (
                     <ol className="list-decimal list-inside mb-4 space-y-2 ml-4 text-zinc-700 dark:text-zinc-300" {...props} />
                   ),
-                  li: ({ node, ...props }) => (
+                  li: (props) => (
                     <li className="leading-7 text-zinc-700 dark:text-zinc-300" {...props} />
                   ),
-                  strong: ({ node, ...props }) => (
+                  strong: (props) => (
                     <strong className="font-bold text-zinc-900 dark:text-zinc-50" {...props} />
                   ),
-                  em: ({ node, ...props }) => (
+                  em: (props) => (
                     <em className="italic text-zinc-700 dark:text-zinc-300" {...props} />
                   ),
-                  code: ({ node, inline, className, children, ...props }: any) => {
-                    const match = /language-(\w+)/.exec(className || "");
-                    return inline ? (
+                  code: ({ inline, className, children, ...props }: HTMLAttributes<HTMLElement> & { inline?: boolean }) =>
+                    inline ? (
                       <code
                         className="px-1.5 py-0.5 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded text-sm font-mono"
                         {...props}
@@ -170,15 +174,14 @@ I hope this email finds you well. I wanted to reach out because I noticed your c
                           {children}
                         </code>
                       </pre>
-                    );
-                  },
-                  blockquote: ({ node, ...props }) => (
+                    ),
+                  blockquote: (props) => (
                     <blockquote
                       className="border-l-4 border-orange-500 pl-4 italic my-4 text-zinc-600 dark:text-zinc-400"
                       {...props}
                     />
                   ),
-                  hr: ({ node, ...props }) => (
+                  hr: (props) => (
                     <hr className="my-6 border-zinc-300 dark:border-zinc-600" {...props} />
                   ),
                 }}
