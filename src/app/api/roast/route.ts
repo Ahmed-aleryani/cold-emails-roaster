@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
 1. ROAST the cold email brutally - point out every weakness, cliché, and mistake with humor and sarcasm
 2. REWRITE the email into a significantly improved version that would actually get responses
 3. EXPLAIN why your version is better in clear, actionable terms
+4. SCORE the improved version after the rewrite is complete, giving a numeric rating and an evidence-based rationale
 
 Be entertaining but educational. The goal is to help people write better cold emails through honest (and funny) feedback.`;
 
@@ -41,13 +42,15 @@ Be entertaining but educational. The goal is to help people write better cold em
 ${email}
 ---
 
-IMPORTANT: You MUST provide all three sections below. Do not stop until all sections are complete.
+IMPORTANT: You MUST provide all four sections below in order. Do not stop until every section is complete.
 
 1. **🔥 THE ROAST**: A brutally honest, entertaining critique of this email. Point out what's wrong, what's cliché, what makes the reader want to hit delete. Be savage but constructive. Keep this section focused and impactful.
 
 2. **✨ THE REWRITE**: An improved version of this email that would actually get responses. Keep the core intent but make it compelling. Include the full rewritten email.
 
-3. **💡 WHY IT'S BETTER**: Explain the key changes you made and why they work. Be specific about what principles you applied.`;
+3. **💡 WHY IT'S BETTER**: Explain the key changes you made and why they work. Be specific about what principles you applied.
+
+4. **📊 IMPROVEMENT SCORE**: After crafting the enhanced version, rate it from 0-100 based on how much better it is than the original. Include a short justification (2 bullets max) referencing the rewrite improvements.`;
 
     logger.info({ promptLength: userPrompt.length, emailLength: email.length, maxOutputTokens: 32768 }, "Generating AI response");
 
